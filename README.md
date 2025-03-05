@@ -12,7 +12,7 @@ python -m venv myvenv
 # Windows
 myvenv\Scripts\activate
 #MacOS
-source venv\bin\activate
+source myvenv\bin\activate
 ```
 
 3. Install CrewAI
