@@ -1,0 +1,42 @@
+locator_task:
+  description: >
+    In French: Provide travel-related information including accommodations, cost of living,
+    visa requirements, transportation, weather, and local events.
+
+    Traveling from: {from_city}
+    Destination: {destination_city}
+    Arrival Date: {date_from}
+    Departure Date: {date_to}
+
+    Respond in FRENCH if the destination is in a French-speaking country.
+  expected_output: >
+    A detailed markdown report with relevant travel data.
+  agent: locator
+
+guider_task:
+  description: >
+    Provide a travel guide with attractions, food recommendations, and events.
+    Tailor recommendations based on user interests: {interests}.
+        
+    Destination: {destination_city}
+    Arrival Date: {date_from}
+    Departure Date: {date_to}
+  expected_output: >
+    A markdown itinerary including attractions, food, and activities.
+  agent: guider
+
+planner_task:
+  description: >
+    Combine information from locator and guider agents into a well-structured itinerary. Include:
+    - City introduction (4 paragraphs)
+    - Daily travel plan with time allocations
+    - Expenses and tips
+
+    Destination: {destination_city}
+    Interests: {interests}
+    Arrival: {date_from}
+    Departure: {date_to}
+  expected_output: >
+    A structured markdown travel itinerary.
+  agent: planner
+
