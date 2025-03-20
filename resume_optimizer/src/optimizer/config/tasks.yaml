@@ -1,0 +1,119 @@
+cv_reader_task:
+  description: >
+    Review the uploaded CV and create structured optimization suggestions.
+
+    1. Content Analysis:
+       - Compare resume content with job requirements
+       - Identify missing keywords and skills
+       - Analyze achievement descriptions
+       - Check for ATS compatibility
+
+    2. Structure Review:
+       - Evaluate section organization
+       - Check formatting consistency
+       - Assess information hierarchy
+       - Verify contact details
+
+    3. Generate Suggestions:
+       - Content improvements with before/after examples
+       - Skills to highlight based on job match
+       - Achievements to add or modify
+       - ATS optimization recommendations
+
+
+    CV file: {upload_cv}
+  expected_output: >
+    A structured summary of the CV, including:
+    - Professional Summary
+    - Technical Skills
+    - Work History
+    - Education
+    - Key Achievements
+  agent: cv_reader
+
+matcher_task:
+  description: >
+    Analyze the {upload_cv} and match candidate with suitable Jobs listed in {path_to_jobs_csv}
+
+    1. Extract Requirements:
+       - Technical skills (required vs nice-to-have)
+       - Soft skills
+       - Experience levels
+       - Education requirements
+       - Industry knowledge
+
+    2. Score Technical Skills (35% of total):
+       - For each required skill:
+         * Match Level (0-1): How well does candidate's experience match?
+         * Years Experience: Compare to required years
+         * Context Score: How relevant is their usage of the skill?
+       - Calculate weighted average based on skill importance
+
+    3. Score Soft Skills (20% of total):
+       - Identify soft skills from resume
+       - Compare against job requirements
+       - Consider context and demonstration of skills
+
+    4. Score Experience (25% of total):
+       - Years of relevant experience
+       - Role similarity
+       - Industry relevance
+       - Project scope and complexity
+
+    5. Score Education (10% of total):
+       - Degree level match
+       - Field of study relevance
+       - Additional certifications
+
+    6. Score Industry Knowledge (10% of total):
+       - Years in similar industry
+       - Domain expertise
+       - Industry-specific achievements
+
+    7. Calculate Overall Score:
+       - Weighted average of all components
+       - Identify key strengths and gaps
+       - Provide detailed scoring explanation
+
+
+    Jobs CSV file: {path_to_jobs_csv}
+
+    CV file: {upload_cv}
+  expected_output: >
+    A ranked list of job opportunities that best match the CV, including:
+    - Job Title
+    - Match Score (based on skills and experience)
+    - Key Matching Points
+  agent: matcher
+
+resume_writer_task:
+  description: >
+    Using the optimization suggestions and job analysis from previous steps, 
+    create a polished resume in markdown format.
+    Do not add markdown code blocks like '```'.
+
+    1. Content Integration:
+       - Incorporate optimization suggestions
+       - Add missing keywords and skills
+       - Enhance achievement descriptions
+       - Ensure ATS compatibility
+
+    2. Formatting:
+       - Use proper markdown headers (#, ##, ###)
+       - Apply consistent styling
+       - Create clear section hierarchy
+       - Use bullet points effectively
+
+    3. Documentation:
+       - Track changes made
+       - Note preserved elements
+       - Explain optimization choices
+
+  expected_output: >
+    A beautifully formatted markdown resume document that:
+    - Incorporates all optimization suggestions
+    - Uses proper markdown formatting
+    - Is ATS-friendly
+    - Documents all changes made
+  agent: resume_writer
+  context: [cv_reader_task, matcher_task]
